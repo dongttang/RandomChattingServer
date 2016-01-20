@@ -17,22 +17,17 @@ public class SocketLinkingManager extends Thread{
 
         while (true) {
 
-            if ( socketQueue.size() >= 2 ) {
-                socket1 = socketQueue.poll();
-                socket2 = socketQueue.poll();
-                new MessageSendingThread(socket1, socket2).start();
-                new MessageSendingThread(socket2, socket1).start();
-
-                socket1 = null;
-                socket2 = null;
+            synchronized (this) {
+                if (socketQueue.size() >= 2) {
+                    socket1 = socketQueue.poll();
+                    socket2 = socketQueue.poll();
+                    new MessageSendingThread(socket1, socket2).start();
+                    new MessageSendingThread(socket2, socket1).start();
+                }
             }
+            socket1 = null;
+            socket2 = null;
         }
-
-
-
     }
-
-
-
 
 }

@@ -20,7 +20,9 @@ public class SocketQueueManager extends Thread {
         while (true) {
             try {
                 acceptedSocket = serverSocket.accept();
-                socketQueue.offer(acceptedSocket);
+                synchronized (this) {
+                    socketQueue.offer(acceptedSocket);
+                }
                 acceptedSocket = null;
             } catch (IOException e) {e.printStackTrace();}
         }
