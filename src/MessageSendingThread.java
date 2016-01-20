@@ -42,7 +42,7 @@ public class MessageSendingThread extends Thread {
             }
         } catch (EOFException e) {
             e.printStackTrace();
-            System.out.println("한쪽이 접속을 종료했습니다.");
+            System.out.println( sendingAddress + " : 접속을 종료했습니다.");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("예상치 못한 예외 발생");
