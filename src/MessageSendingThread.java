@@ -1,5 +1,6 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -37,12 +38,22 @@ public class MessageSendingThread extends Thread {
                 String message = dataInputStream.readUTF().toString();
                 dataOutputStream.writeUTF(message);
                 dataOutputStream.flush();
-                System.out.println(sendingAddress + " >> " + receievingAddress + " : " + message );
+                System.out.println(sendingAddress + " >> " + receievingAddress + " : " + message);
             }
-        } catch (IOException e) {
+        } catch (EOFException e) {
             e.printStackTrace();
+            System.out.println("한쪽이 접속을 종료했습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("예상치 못한 예외 발생");
         } finally {
-            System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
+            try {
+                dataOutputStream.close();
+                dataInputStream.close();
+                messageSendingSocket.close();
+                messageReceievingSocket.close();
+                System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
+            } catch (IOException e) {e.printStackTrace();}
         }
     }
 }
