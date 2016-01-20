@@ -1,15 +1,17 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class SocketQueueManager extends Thread {
 
-    PriorityQueue<Socket>   socketQueue;
+    Queue<Socket>           socketQueue;
     ServerSocket            serverSocket;
     Socket                  acceptedSocket;
 
-    public SocketQueueManager ( PriorityQueue<Socket> socketQueue, ServerSocket serverSocket ) {
+    public SocketQueueManager (LinkedList<Socket> socketQueue, ServerSocket serverSocket ) {
         this.socketQueue    = socketQueue;
         this.serverSocket   = serverSocket;
     }
@@ -19,7 +21,7 @@ public class SocketQueueManager extends Thread {
         while (true) {
             try {
                 acceptedSocket = serverSocket.accept();
-                socketQueue.add(acceptedSocket);
+                socketQueue.offer(acceptedSocket);
                 acceptedSocket = null;
             } catch (IOException e) {e.printStackTrace();}
         }

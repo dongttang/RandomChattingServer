@@ -1,13 +1,13 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 public class TcpIpServer {
 
     public final int        SOCKET_SERVER_PORT;
     ServerSocket            serverSocket;
-    PriorityQueue<Socket>   socketQueue;
+    LinkedList<Socket> socketQueue;
 
     public TcpIpServer () {
         this.SOCKET_SERVER_PORT = 7777;
@@ -16,7 +16,7 @@ public class TcpIpServer {
     public void start() {
         try {
             serverSocket =  new ServerSocket(SOCKET_SERVER_PORT);
-            socketQueue  =  new PriorityQueue<>();
+            socketQueue  =  new LinkedList<>();
 
             SocketQueueManager    queueManager   = new SocketQueueManager(socketQueue, serverSocket);
             SocketLinkingManager  linkingManager = new SocketLinkingManager(socketQueue);

@@ -5,10 +5,12 @@ import java.net.Socket;
 
 public class MessageSendingThread extends Thread {
 
-    Socket messageSendingSocket;
-    Socket messageReceievingSocket;
-    DataInputStream dataInputStream;
-    DataOutputStream dataOutputStream;
+    Socket              messageSendingSocket;
+    Socket              messageReceievingSocket;
+    DataInputStream     dataInputStream;
+    DataOutputStream    dataOutputStream;
+    String              sendingAddress;
+    String              receievingAddress;
 
     public MessageSendingThread(Socket messageSendingSocket, Socket messageReceievingSocket) {
         this.messageSendingSocket       = messageSendingSocket;
@@ -21,8 +23,8 @@ public class MessageSendingThread extends Thread {
 
             dataOutputStream            = new DataOutputStream(messageSendingSocket.getOutputStream());
             dataInputStream             = new DataInputStream(messageReceievingSocket.getInputStream());
-            String sendingAddress       = messageSendingSocket.getInetAddress().toString();
-            String receievingAddress    = messageReceievingSocket.getInetAddress().toString();
+            sendingAddress              = messageSendingSocket.getInetAddress().toString();
+            receievingAddress           = messageReceievingSocket.getInetAddress().toString();
 
             System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 연결됨");
 
@@ -30,19 +32,18 @@ public class MessageSendingThread extends Thread {
             e.printStackTrace();
         }
 
-        while (true) {
-            try {
+        try {
+            while (true) {
                 String message = dataInputStream.readUTF().toString();
                 dataOutputStream.writeUTF(message);
                 dataOutputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                String sendingAddress = messageSendingSocket.getInetAddress().toString();
-                String receievingAddress = messageReceievingSocket.getInetAddress().toString();
-                System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
+                System.out.println(sendingAddress + " >> " + receievingAddress + " : " + message );
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
         }
     }
-
 }
+

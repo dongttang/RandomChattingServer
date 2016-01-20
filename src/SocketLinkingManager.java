@@ -1,15 +1,14 @@
-import sun.plugin2.message.Message;
-
 import java.net.Socket;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class SocketLinkingManager extends Thread{
 
-    PriorityQueue<Socket>   socketQueue;
+    Queue<Socket>           socketQueue;
     Socket                  socket1;
     Socket                  socket2;
 
-    public SocketLinkingManager( PriorityQueue<Socket> socketQueue ) {
+    public SocketLinkingManager(LinkedList<Socket> socketQueue) {
         this.socketQueue = socketQueue;
     }
 
