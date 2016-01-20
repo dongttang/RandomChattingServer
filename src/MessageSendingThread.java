@@ -53,6 +53,7 @@ public class MessageSendingThread extends Thread {
                 messageSendingSocket.close();
                 messageReceievingSocket.close();
                 System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
+                interrupt();
             } catch (IOException e) {e.printStackTrace();}
         }
     }
