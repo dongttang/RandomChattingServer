@@ -26,12 +26,13 @@ public class MessageSendingThread extends Thread {
             dataInputStream             = new DataInputStream(messageReceievingSocket.getInputStream());
             sendingAddress              = messageSendingSocket.getInetAddress().toString();
             receievingAddress           = messageReceievingSocket.getInetAddress().toString();
-
             System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 연결됨");
-
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 연결도중 오류 발생");
+        }finally {
+            interrupt();
         }
+
 
         try {
             while (true) {
@@ -41,11 +42,9 @@ public class MessageSendingThread extends Thread {
                 System.out.println(sendingAddress + " >> " + receievingAddress + " : " + message);
             }
         } catch (EOFException e) {
-            e.printStackTrace();
             System.out.println( sendingAddress + " : 접속을 종료했습니다.");
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("예상치 못한 예외 발생");
+            System.out.println( sendingAddress + " : 예외 발생... 반대편 쓰레드에서 접속을 끊었을 수 있습니다.");
         } finally {
             try {
                 dataOutputStream.close();
@@ -54,7 +53,9 @@ public class MessageSendingThread extends Thread {
                 messageReceievingSocket.close();
                 System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료");
                 interrupt();
-            } catch (IOException e) {e.printStackTrace();}
+            } catch (IOException e) {
+                System.out.println(sendingAddress + " >> " + receievingAddress + " : 스트림 종료도중 오류 발생");
+            }
         }
     }
 }
