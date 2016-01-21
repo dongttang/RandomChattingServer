@@ -5,12 +5,14 @@ import java.util.LinkedList;
 
 public class TcpIpServer {
 
-    public final int        SOCKET_SERVER_PORT;
+    final int               SOCKET_SERVER_PORT;
+    int[]                   linkedClientPair;
     ServerSocket            serverSocket;
-    LinkedList<Socket> socketQueue;
+    LinkedList<Socket>      socketQueue;
 
     public TcpIpServer () {
         this.SOCKET_SERVER_PORT = 7777;
+        this.linkedClientPair = new int[]{0};
     }
 
     public void start() {
@@ -19,7 +21,7 @@ public class TcpIpServer {
             socketQueue  =  new LinkedList<>();
 
             SocketQueueManager    queueManager   = new SocketQueueManager(socketQueue, serverSocket);
-            SocketLinkingManager  linkingManager = new SocketLinkingManager(socketQueue);
+            SocketLinkingManager  linkingManager = new SocketLinkingManager(socketQueue, linkedClientPair);
             queueManager.start();
             linkingManager.start();
             System.out.println("서버가 시작되었습니다.");
