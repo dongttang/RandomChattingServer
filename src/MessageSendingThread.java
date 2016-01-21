@@ -12,10 +12,12 @@ public class MessageSendingThread extends Thread {
     DataOutputStream    dataOutputStream;
     String              sendingAddress;
     String              receievingAddress;
+    int[]               numOfLinkedClientPair;
 
-    public MessageSendingThread(Socket messageSendingSocket, Socket messageReceievingSocket) {
+    public MessageSendingThread(Socket messageSendingSocket, Socket messageReceievingSocket, int[] linkedClientPair) {
         this.messageSendingSocket       = messageSendingSocket;
         this.messageReceievingSocket    = messageReceievingSocket;
+        this.numOfLinkedClientPair = linkedClientPair;
     }
 
     @Override
@@ -42,9 +44,12 @@ public class MessageSendingThread extends Thread {
                 System.out.println(sendingAddress + " >> " + receievingAddress + " : " + message);
             }
         } catch (EOFException e) {
+            numOfLinkedClientPair[0] --;
+            System.out.println( "\n현재 채팅방 수 : " + numOfLinkedClientPair[0] + "개");
             System.out.println( sendingAddress + " : 접속을 종료했습니다.");
+
         } catch (Exception e) {
-            System.out.println( sendingAddress + " : 예외 발생... 반대편 쓰레드에서 접속을 끊었을 수 있습니다.");
+            System.out.println( sendingAddress + " : 예외 발생... 반대편 스레드에서 접속을 끊었을 수 있습니다.");
         } finally {
             try {
                 dataOutputStream.close();
